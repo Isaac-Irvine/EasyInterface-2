@@ -39,17 +39,3 @@ class Variable:
 
     def get_type(self):
         return self._type
-
-    def get_jsonable(self):
-        """
-        Gets all the information needed to recreate this Variable in JSON compatible data type
-        :return: A dictionary with everything needed to recreate this Variable
-        """
-        # action add them self's when loaded
-        return {
-            'name': self._name,
-            'type': self._type,
-            'comment': self._comment,
-            'value': self._value,
-            'on_update_action': self._on_update_action.get_jsonable()
-        }
