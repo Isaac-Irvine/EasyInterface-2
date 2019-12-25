@@ -1,10 +1,13 @@
+from .actions import ActionList
+
 
 class Variable:
     """
     Used to store a piece of information.
+    Information should never be None
     """
 
-    def __init__(self, name, variable_type, value=None, comment=None):
+    def __init__(self, name, variable_type, value, comment=None, on_update_action=None):
         """
 
         :param name: Name of the variable
@@ -14,22 +17,13 @@ class Variable:
         """
         self._name = name
         self._type = variable_type
-        self._comment = comment
+        self._comment = "" if comment is None else comment
         self._value = value
-        self._actions = set()
-
-    def add_listener(self, action):
-        """
-        When the value of the variable is changed, it will run the given action
-        :param action: The action to run when the variable is changed
-        :return: None
-        """
-        self._actions.add(action)
+        self._on_update_action = ActionList() if on_update_action is None else on_update_action
 
     def set_value(self, value):
         self._value = value
-        for action in self._actions:
-            action.run()
+        self._on_update_action.run()
 
     def get_value(self):
         return self._value
@@ -56,5 +50,6 @@ class Variable:
             'name': self._name,
             'type': self._type,
             'comment': self._comment,
-            'value': self._value
+            'value': self._value,
+            'on_update_action': self._on_update_action.get_jsonable()
         }
